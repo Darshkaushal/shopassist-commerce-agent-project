@@ -137,6 +137,163 @@ html, body { overflow-x: hidden; }
 
 st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
+VISIBILITY_FIX_CSS = """
+<style>
+/* High-contrast production visibility fix */
+:root {
+    --bg: #050712;
+    --panel: rgba(17, 24, 39, 0.90);
+    --panel-strong: rgba(15, 23, 42, 0.98);
+    --line: rgba(226, 232, 240, 0.20);
+    --line-strong: rgba(226, 232, 240, 0.36);
+    --text: #ffffff;
+    --muted: #d1d5db;
+    --soft: #e5e7eb;
+    --brand: #8b5cf6;
+    --brand-2: #22d3ee;
+}
+
+html, body, .stApp, [data-testid="stAppViewContainer"], .block-container,
+[data-testid="stMarkdownContainer"], [data-testid="stMarkdownContainer"] p,
+[data-testid="stMarkdownContainer"] li, p, li, span, label, div {
+    color: #f8fafc;
+    text-rendering: geometricPrecision;
+}
+
+.stApp {
+    background:
+        radial-gradient(circle at 16% 6%, rgba(139, 92, 246, 0.36), transparent 30%),
+        radial-gradient(circle at 88% 0%, rgba(34, 211, 238, 0.28), transparent 28%),
+        linear-gradient(140deg, #050712 0%, #0b1020 48%, #081827 100%) !important;
+}
+
+/* sidebar text was looking dull on laptop/mobile */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, rgba(5, 7, 18, 0.99), rgba(11, 18, 32, 0.98)) !important;
+    border-right: 1px solid rgba(226, 232, 240, 0.18) !important;
+}
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
+[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] p,
+[data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3,
+[data-testid="stSidebar"] h4, [data-testid="stSidebar"] span,
+[data-testid="stSidebar"] label, [data-testid="stSidebar"] .stCaptionContainer {
+    color: #f8fafc !important;
+    opacity: 1 !important;
+}
+[data-testid="stSidebar"] .stCaptionContainer, .brand-subtitle, .muted, .section-subtitle,
+.workflow-copy, .product-meta, .desc, .hero-copy, .metric-foot, .ops-copy {
+    color: #dbe4f0 !important;
+    opacity: 1 !important;
+}
+
+.sidebar-brand, .hero, .metric-card, .glass-card, .trace-card, .product-card, .order-card, .workflow-card,
+.prompt-card, .chat-shell, .ops-panel, .status-mini-card {
+    background: linear-gradient(145deg, rgba(17,24,39,0.94), rgba(15,23,42,0.86)) !important;
+    border: 1px solid rgba(226,232,240,0.18) !important;
+    box-shadow: 0 20px 70px rgba(0,0,0,0.42) !important;
+}
+
+.hero {
+    background:
+        linear-gradient(135deg, rgba(124, 58, 237, 0.32), rgba(6, 182, 212, 0.22)),
+        rgba(15, 23, 42, 0.92) !important;
+}
+
+.brand-title, .hero-title, .section-heading, .workflow-title, .product-name,
+.order-title, .trace-title, .metric-value, .price, .fulfillment-value, .logo-mark {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.22);
+}
+.hero-title span {
+    background: linear-gradient(135deg, #ffffff 0%, #ddd6fe 42%, #67e8f9 88%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    color: transparent !important;
+}
+
+.eyebrow, .pill, .tool-badge, .warning-badge, .danger-badge, .neutral-badge,
+.status-step, .rating, .metric-label, .fulfillment-label {
+    opacity: 1 !important;
+    filter: none !important;
+}
+.pill {
+    background: rgba(255,255,255,0.14) !important;
+    border-color: rgba(255,255,255,0.22) !important;
+    color: #ffffff !important;
+}
+.metric-label, .fulfillment-label {
+    color: #c7d2fe !important;
+}
+.workflow-copy, .product-meta, .desc, .muted, .section-subtitle {
+    color: #dbe4f0 !important;
+}
+
+/* Streamlit widgets */
+.stButton > button, .stFormSubmitButton > button {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #7c3aed 0%, #0ea5e9 100%) !important;
+    border: 1px solid rgba(255,255,255,0.28) !important;
+    box-shadow: 0 16px 36px rgba(14,165,233,0.22) !important;
+}
+.stButton > button:hover, .stFormSubmitButton > button:hover {
+    background: linear-gradient(135deg, #8b5cf6 0%, #22d3ee 100%) !important;
+    border-color: rgba(255,255,255,0.42) !important;
+}
+[data-testid="stTextInput"] input, [data-testid="stTextArea"] textarea,
+[data-baseweb="input"] input, [data-baseweb="textarea"] textarea {
+    background: rgba(15, 23, 42, 0.94) !important;
+    color: #ffffff !important;
+    caret-color: #22d3ee !important;
+    border: 1px solid rgba(226,232,240,0.32) !important;
+    font-weight: 700 !important;
+}
+[data-testid="stTextInput"] input::placeholder, [data-testid="stTextArea"] textarea::placeholder {
+    color: #cbd5e1 !important;
+    opacity: 1 !important;
+}
+[data-baseweb="select"] > div, [data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+    background: rgba(15, 23, 42, 0.94) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(226,232,240,0.32) !important;
+}
+
+/* tabs look like a real product nav */
+.stTabs [data-baseweb="tab"] {
+    color: #f8fafc !important;
+    background: rgba(255,255,255,0.10) !important;
+    border-color: rgba(255,255,255,0.18) !important;
+}
+.stTabs [aria-selected="true"] {
+    background: linear-gradient(135deg, #7c3aed 0%, #0284c7 100%) !important;
+    color: #ffffff !important;
+}
+
+code, pre { color: #dbeafe !important; background: rgba(2, 6, 23, 0.70) !important; }
+.stAlert { color: #0f172a !important; }
+.stAlert * { color: inherit !important; }
+
+/* Better laptop spacing */
+.block-container { padding-left: 2.2rem !important; padding-right: 2.2rem !important; }
+
+@media (max-width: 980px) {
+    .block-container { padding: 0.8rem 0.8rem 1.5rem 0.8rem !important; }
+    html, body, .stApp, [data-testid="stMarkdownContainer"] p, p, li, span, label, div {
+        font-size-adjust: none;
+    }
+    .hero, .metric-card, .workflow-card, .glass-card, .trace-card, .product-card, .order-card, .chat-shell, .ops-panel, .prompt-card {
+        background: rgba(15, 23, 42, 0.94) !important;
+        border-color: rgba(226, 232, 240, 0.18) !important;
+    }
+    .hero-title { color: #ffffff !important; }
+    .hero-copy, .section-subtitle, .workflow-copy, .desc, .muted { color: #e5e7eb !important; }
+}
+</style>
+"""
+
+st.markdown(VISIBILITY_FIX_CSS, unsafe_allow_html=True)
+
+
 
 def auth_headers(admin_key: str) -> Dict[str, str]:
     return {"X-Admin-Key": admin_key}

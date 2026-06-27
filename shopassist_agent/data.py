@@ -1,15 +1,230 @@
-"""In-memory commerce data used by the agent tools.
+"""Mock online-store data for the assignment.
 
-This keeps the assignment self-contained. In a production system these records
-would come from a database or order-management service.
+The company assignment focuses on agentic behavior, not database engineering, so this file acts as
+an in-memory database. In production, the same tool layer can be connected to SQL/NoSQL APIs.
 """
 
 from __future__ import annotations
 
-from copy import deepcopy
-from typing import Any
+PRODUCTS = {
+    "P-1001": {
+        "product_id": "P-1001",
+        "name": "Urban Runner Sneakers",
+        "category": "shoes",
+        "brand": "StepUp",
+        "price": 2999,
+        "currency": "INR",
+        "stock": 14,
+        "rating": 4.5,
+        "keywords": ["shoes", "sneakers", "running", "casual", "men"],
+        "description": "Lightweight sneakers for daily casual and running use.",
+    },
+    "P-1002": {
+        "product_id": "P-1002",
+        "name": "AeroFlex Running Shoes",
+        "category": "shoes",
+        "brand": "RunPro",
+        "price": 3499,
+        "currency": "INR",
+        "stock": 8,
+        "rating": 4.7,
+        "keywords": ["shoes", "running", "sports", "premium", "men"],
+        "description": "Premium cushioned running shoes for everyday training.",
+    },
+    "P-1003": {
+        "product_id": "P-1003",
+        "name": "Budget Street Sneakers",
+        "category": "shoes",
+        "brand": "StreetLite",
+        "price": 1799,
+        "currency": "INR",
+        "stock": 21,
+        "rating": 4.1,
+        "keywords": ["shoes", "sneakers", "budget", "casual", "cheap"],
+        "description": "Affordable casual sneakers with breathable material.",
+    },
+    "P-1004": {
+        "product_id": "P-1004",
+        "name": "Classic Canvas Shoes",
+        "category": "shoes",
+        "brand": "DailyWear",
+        "price": 1299,
+        "currency": "INR",
+        "stock": 0,
+        "rating": 3.9,
+        "keywords": ["shoes", "canvas", "casual", "budget"],
+        "description": "Simple canvas shoes. Currently out of stock.",
+    },
+    "P-1005": {
+        "product_id": "P-1005",
+        "name": "TrailGrip Outdoor Shoes",
+        "category": "shoes",
+        "brand": "HillMax",
+        "price": 2599,
+        "currency": "INR",
+        "stock": 11,
+        "rating": 4.3,
+        "keywords": ["shoes", "outdoor", "trekking", "trail"],
+        "description": "Durable outdoor shoes with better grip for light trekking.",
+    },
+    "P-2001": {
+        "product_id": "P-2001",
+        "name": "CloudSoft Hoodie",
+        "category": "hoodie",
+        "brand": "Warmify",
+        "price": 2199,
+        "currency": "INR",
+        "stock": 17,
+        "rating": 4.6,
+        "keywords": ["hoodie", "sweatshirt", "winter", "soft", "clothing"],
+        "description": "Soft fleece hoodie with a comfortable relaxed fit.",
+    },
+    "P-2002": {
+        "product_id": "P-2002",
+        "name": "Essential Cotton Hoodie",
+        "category": "hoodie",
+        "brand": "DailyWear",
+        "price": 1499,
+        "currency": "INR",
+        "stock": 23,
+        "rating": 4.0,
+        "keywords": ["hoodie", "budget", "cotton", "clothing"],
+        "description": "Budget friendly cotton hoodie for daily use.",
+    },
+    "P-3001": {
+        "product_id": "P-3001",
+        "name": "CampusPro Backpack",
+        "category": "bag",
+        "brand": "Packly",
+        "price": 1899,
+        "currency": "INR",
+        "stock": 30,
+        "rating": 4.4,
+        "keywords": ["bag", "backpack", "college", "laptop", "travel"],
+        "description": "25L backpack with laptop compartment and rain cover.",
+    },
+    "P-3002": {
+        "product_id": "P-3002",
+        "name": "LiteCarry Backpack",
+        "category": "bag",
+        "brand": "Packly",
+        "price": 999,
+        "currency": "INR",
+        "stock": 18,
+        "rating": 4.0,
+        "keywords": ["bag", "backpack", "budget", "college"],
+        "description": "Compact budget backpack for everyday use.",
+    },
+    "P-4001": {
+        "product_id": "P-4001",
+        "name": "BassBeat Wireless Headphones",
+        "category": "headphones",
+        "brand": "SoundX",
+        "price": 2499,
+        "currency": "INR",
+        "stock": 12,
+        "rating": 4.2,
+        "keywords": ["headphones", "wireless", "music", "bluetooth", "audio"],
+        "description": "Wireless headphones with 35-hour battery backup.",
+    },
+    "P-4002": {
+        "product_id": "P-4002",
+        "name": "ClearTune Earbuds",
+        "category": "earbuds",
+        "brand": "SoundX",
+        "price": 1599,
+        "currency": "INR",
+        "stock": 26,
+        "rating": 4.1,
+        "keywords": ["earbuds", "headphones", "wireless", "bluetooth", "audio", "budget"],
+        "description": "Compact wireless earbuds with touch controls.",
+    },
+    "P-5001": {
+        "product_id": "P-5001",
+        "name": "ActiveFit Smart Watch",
+        "category": "watch",
+        "brand": "FitNova",
+        "price": 2999,
+        "currency": "INR",
+        "stock": 7,
+        "rating": 4.3,
+        "keywords": ["watch", "smartwatch", "fitness", "sports"],
+        "description": "Smart watch with activity tracking and 7-day battery life.",
+    },
+}
 
-VALID_ORDER_STATUSES = [
+ORDERS = {
+    "ORD-1001": {
+        "order_id": "ORD-1001",
+        "customer_name": "Aarav Sharma",
+        "status": "Delivered",
+        "items": [{"product_id": "P-1001", "quantity": 1, "paid_price": 2999}],
+        "order_total": 2999,
+        "placed_on": "2026-06-18",
+        "eta": "Delivered on 2026-06-22",
+        "tracking_id": "TRK-77821",
+        "carrier": "BlueDart",
+        "last_update": "Package delivered to customer.",
+    },
+    "ORD-1002": {
+        "order_id": "ORD-1002",
+        "customer_name": "Priya Mehta",
+        "status": "Shipped",
+        "items": [{"product_id": "P-1002", "quantity": 1, "paid_price": 3499}],
+        "order_total": 3499,
+        "placed_on": "2026-06-21",
+        "eta": "Expected by 2026-06-28",
+        "tracking_id": "TRK-88420",
+        "carrier": "Delhivery",
+        "last_update": "Shipment left Jaipur hub and is in transit.",
+    },
+    "ORD-1003": {
+        "order_id": "ORD-1003",
+        "customer_name": "Rohan Verma",
+        "status": "Processing",
+        "items": [{"product_id": "P-2001", "quantity": 1, "paid_price": 2199}],
+        "order_total": 2199,
+        "placed_on": "2026-06-24",
+        "eta": "Expected dispatch by 2026-06-27",
+        "tracking_id": None,
+        "carrier": None,
+        "last_update": "Order is being packed at the warehouse.",
+    },
+    "ORD-1004": {
+        "order_id": "ORD-1004",
+        "customer_name": "Neha Singh",
+        "status": "Cancelled",
+        "items": [{"product_id": "P-3001", "quantity": 1, "paid_price": 1899}],
+        "order_total": 1899,
+        "placed_on": "2026-06-20",
+        "eta": "Cancelled on 2026-06-21",
+        "tracking_id": None,
+        "carrier": None,
+        "last_update": "Order was cancelled before dispatch. Refund is under process.",
+    },
+    "ORD-1005": {
+        "order_id": "ORD-1005",
+        "customer_name": "Kabir Khan",
+        "status": "Out for Delivery",
+        "items": [
+            {"product_id": "P-1005", "quantity": 1, "paid_price": 2599},
+            {"product_id": "P-3001", "quantity": 1, "paid_price": 1899},
+        ],
+        "order_total": 4498,
+        "placed_on": "2026-06-22",
+        "eta": "Expected today",
+        "tracking_id": "TRK-91008",
+        "carrier": "Ecom Express",
+        "last_update": "Courier partner is out for delivery.",
+    },
+}
+
+SUPPORTED_CATEGORIES = ["shoes", "hoodie", "bag", "headphones", "earbuds", "watch"]
+
+# Order fulfillment configuration used by the backend and Streamlit operations dashboard.
+# These statuses make the demo feel closer to a real commerce support tool while keeping
+# the required assignment data small and easy to explain.
+ORDER_STATUSES = [
     "Processing",
     "Dispatched",
     "Shipped",
@@ -18,127 +233,55 @@ VALID_ORDER_STATUSES = [
     "Cancelled",
 ]
 
-PRODUCTS: dict[str, dict[str, Any]] = {
-    "P-4001": {
-        "product_id": "P-4001",
-        "name": "AeroRun Lite Shoes",
-        "category": "shoes",
-        "brand": "AeroRun",
-        "price": 2499,
-        "color": "Black",
-        "stock": 12,
-        "rating": 4.4,
-        "description": "Lightweight running shoes for daily comfort and casual training.",
-    },
-    "P-4002": {
-        "product_id": "P-4002",
-        "name": "StreetFlex Sneakers",
-        "category": "shoes",
-        "brand": "StreetFlex",
-        "price": 1799,
-        "color": "White",
-        "stock": 8,
-        "rating": 4.2,
-        "description": "Budget-friendly sneakers with soft cushioning and clean streetwear styling.",
-    },
-    "P-4003": {
-        "product_id": "P-4003",
-        "name": "UrbanStep Canvas Shoes",
-        "category": "shoes",
-        "brand": "UrbanStep",
-        "price": 1399,
-        "color": "Navy",
-        "stock": 0,
-        "rating": 4.0,
-        "description": "Classic canvas shoes for everyday use. Currently out of stock.",
-    },
-    "P-5001": {
-        "product_id": "P-5001",
-        "name": "Everyday Cotton T-Shirt",
-        "category": "t-shirt",
-        "brand": "BasicsCo",
-        "price": 699,
-        "color": "Blue",
-        "stock": 25,
-        "rating": 4.3,
-        "description": "Soft cotton t-shirt with a regular fit for daily wear.",
-    },
-    "P-5002": {
-        "product_id": "P-5002",
-        "name": "Premium Polo T-Shirt",
-        "category": "t-shirt",
-        "brand": "BasicsCo",
-        "price": 1199,
-        "color": "Olive",
-        "stock": 10,
-        "rating": 4.5,
-        "description": "Premium polo with breathable fabric and smart casual styling.",
-    },
-    "P-6001": {
-        "product_id": "P-6001",
-        "name": "TravelPro Backpack",
-        "category": "bag",
-        "brand": "TravelPro",
-        "price": 1999,
-        "color": "Grey",
-        "stock": 6,
-        "rating": 4.6,
-        "description": "Durable backpack with laptop sleeve and multiple compartments.",
-    },
+STATUS_PROGRESS = {
+    "Processing": 30,
+    "Dispatched": 50,
+    "Shipped": 65,
+    "Out for Delivery": 88,
+    "Delivered": 100,
+    "Cancelled": 15,
 }
 
-ORDERS: dict[str, dict[str, Any]] = {
-    "ORD-1001": {
-        "order_id": "ORD-1001",
-        "customer_name": "Aarav Sharma",
-        "status": "Delivered",
-        "tracking_id": "TRK-77210",
-        "carrier": "BlueDart",
-        "eta": "Delivered on 2026-06-24",
-        "last_update": "Order was delivered successfully.",
-        "items": [
-            {"product_id": "P-5001", "quantity": 2},
-        ],
+STATUS_DESCRIPTIONS = {
+    "Processing": "Order is confirmed and being packed at the warehouse.",
+    "Dispatched": "Package has left the warehouse and has been handed to a courier partner.",
+    "Shipped": "Shipment is moving through the courier network.",
+    "Out for Delivery": "Courier partner is taking the package to the customer today.",
+    "Delivered": "Package has been delivered to the customer.",
+    "Cancelled": "Order has been cancelled and will not be fulfilled.",
+}
+
+STATUS_DEFAULT_UPDATES = {
+    "Processing": {
+        "eta": "Expected dispatch soon",
+        "last_update": "Order is confirmed and is being prepared at the warehouse.",
+        "carrier": None,
+        "tracking_id": None,
     },
-    "ORD-1002": {
-        "order_id": "ORD-1002",
-        "customer_name": "Priya Mehta",
-        "status": "Shipped",
-        "tracking_id": "TRK-88420",
+    "Dispatched": {
+        "eta": "Expected delivery in 2-4 days",
+        "last_update": "Package has been dispatched from the warehouse and handed to the courier partner.",
         "carrier": "Delhivery",
-        "eta": "Expected by 2026-06-28",
-        "last_update": "Shipment left Jaipur hub and is in transit.",
-        "items": [
-            {"product_id": "P-4001", "quantity": 1},
-        ],
     },
-    "ORD-1003": {
-        "order_id": "ORD-1003",
-        "customer_name": "Rahul Verma",
-        "status": "Processing",
-        "tracking_id": "Not assigned yet",
-        "carrier": "Not assigned yet",
-        "eta": "Preparing for dispatch",
-        "last_update": "Order is confirmed and being packed at the warehouse.",
-        "items": [
-            {"product_id": "P-6001", "quantity": 1},
-            {"product_id": "P-5002", "quantity": 1},
-        ],
+    "Shipped": {
+        "eta": "Expected delivery in 2-3 days",
+        "last_update": "Shipment is in transit through the courier network.",
+        "carrier": "Delhivery",
+    },
+    "Out for Delivery": {
+        "eta": "Expected today",
+        "last_update": "Courier partner is out for delivery with the package.",
+        "carrier": "Ecom Express",
+    },
+    "Delivered": {
+        "eta": "Delivered today",
+        "last_update": "Package delivered successfully to the customer.",
+    },
+    "Cancelled": {
+        "eta": "Cancelled",
+        "last_update": "Order was cancelled and will not be dispatched.",
+        "carrier": None,
+        "tracking_id": None,
     },
 }
 
-
-def get_all_orders() -> list[dict[str, Any]]:
-    return deepcopy(list(ORDERS.values()))
-
-
-def get_all_products() -> list[dict[str, Any]]:
-    return deepcopy(list(PRODUCTS.values()))
-
-
-def update_order_record(order_id: str, updates: dict[str, Any]) -> dict[str, Any] | None:
-    order = ORDERS.get(order_id.upper())
-    if not order:
-        return None
-    order.update({k: v for k, v in updates.items() if v is not None and v != ""})
-    return deepcopy(order)

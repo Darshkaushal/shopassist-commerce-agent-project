@@ -1,4 +1,4 @@
-"""ShopAssist Commerce Agent package."""
+"""ShopAssist Agent package."""
 
 from .agent import run_agent, run_agent_detailed
 

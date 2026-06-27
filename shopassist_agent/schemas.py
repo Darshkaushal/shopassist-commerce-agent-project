@@ -1,24 +1,40 @@
-"""Pydantic schemas shared by FastAPI endpoints."""
+"""Typed response schemas used by the agent and UI."""
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 
-class AgentQuestion(BaseModel):
-    question: str = Field(..., min_length=2)
+@dataclass
+class ToolCall:
+    """Human-readable record of a tool execution."""
 
-
-class AgentAnswer(BaseModel):
-    answer: str
-    intent: str | None = None
-    tools_used: list[str] = []
-    trace: list[str] = []
-
-
-class StatusUpdateRequest(BaseModel):
+    name: str
+    input: Dict[str, Any]
     status: str
-    tracking_id: str | None = None
-    carrier: str | None = None
-    eta: str | None = None
-    last_update: str | None = None
+    output_summary: str
+    timestamp: str = field(default_factory=lambda: datetime.now().isoformat(timespec="seconds"))
+
+
+@dataclass
+class AgentResult:
+    """Structured result used by Streamlit while run_agent returns only the answer."""
+
+    answer: str
+    intent: str
+    confidence: float
+    entities: Dict[str, Any] = field(default_factory=dict)
+    tool_calls: List[ToolCall] = field(default_factory=list)
+    safety_notes: Optional[str] = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {
+            "answer": self.answer,
+            "intent": self.intent,
+            "confidence": self.confidence,
+            "entities": self.entities,
+            "tool_calls": [call.__dict__ for call in self.tool_calls],
+            "safety_notes": self.safety_notes,
+        }

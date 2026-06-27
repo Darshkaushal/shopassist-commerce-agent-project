@@ -1,1 +1,1 @@
-"""FastAPI backend package."""
+"""FastAPI backend package for ShopAssist Commerce."""

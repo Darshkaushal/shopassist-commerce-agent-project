@@ -1,34 +1,37 @@
-"""Small JSONL logger for tool calls and admin actions."""
+"""JSONL logger for tool calls and agent decisions."""
 
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Dict
 
-LOG_DIR = Path("logs")
-LOG_FILE = LOG_DIR / "activity.jsonl"
+LOG_DIR = Path(__file__).resolve().parent.parent / "logs"
+LOG_FILE = LOG_DIR / "tool_calls.jsonl"
 
 
-def log_event(event_type: str, payload: dict[str, Any]) -> None:
-    LOG_DIR.mkdir(exist_ok=True)
-    row = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+def log_event(event_type: str, payload: Dict[str, Any]) -> None:
+    """Append a structured event to logs/tool_calls.jsonl."""
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    event = {
+        "timestamp": datetime.now().isoformat(timespec="seconds"),
         "event_type": event_type,
-        "payload": payload,
+        **payload,
     }
     with LOG_FILE.open("a", encoding="utf-8") as file:
-        file.write(json.dumps(row, ensure_ascii=False) + "\n")
+        file.write(json.dumps(event, ensure_ascii=False) + "\n")
 
 
-def read_logs(limit: int = 50) -> list[dict[str, Any]]:
+def read_recent_logs(limit: int = 30) -> list[dict[str, Any]]:
+    """Read recent JSONL events for the Streamlit UI."""
     if not LOG_FILE.exists():
         return []
-    rows: list[dict[str, Any]] = []
-    for line in LOG_FILE.read_text(encoding="utf-8").splitlines()[-limit:]:
+    lines = LOG_FILE.read_text(encoding="utf-8").splitlines()[-limit:]
+    events: list[dict[str, Any]] = []
+    for line in lines:
         try:
-            rows.append(json.loads(line))
+            events.append(json.loads(line))
         except json.JSONDecodeError:
             continue
-    return rows
+    return events
